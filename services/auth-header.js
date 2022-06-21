@@ -1,5 +1,5 @@
 const authHeader = ()=>{
-    const user = JSON.parse(localStorage.getItem('WM_User'));
+    const user = JSON.parse(localStorage.getItem('WM_Mobile_User'));
     if(user&&user.token){
         return {Authorization :`Bearer ${user.token}`};
     }

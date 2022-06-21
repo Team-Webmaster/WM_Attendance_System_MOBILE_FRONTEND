@@ -1,18 +1,35 @@
 import React from 'react';
 import { TextInput, View, StyleSheet, Button, Text } from 'react-native';
 import authService from '../services/auth.service';
+import { UserContext } from '../store/Context';
 
 const Login = ({navigation}) => {
 
     const [values,setValues] = React.useState({email:'',password:''});
+    const [errMsg,setErrMsg] = React.useState('');
+    const {setUserData} = React.useContext(UserContext);
 
     const handleSubmit = async ()=>{
         const loginData = {
             email:values.email,
             password:values.password
         }
-        navigation.navigate('Home');
+        if((!loginData.email)||(!loginData.password)){
+            return;
+        }
+        console.log(loginData);
         const response = await authService.login(loginData);
+        if (response.status===200) {
+            console.log(response.data);
+            setUserData(response.data.data);
+            navigation.navigate('Home');
+          }
+          else if(response.status===400) {
+            console.log(response);
+            setErrMsg(response.data.message);
+          }else{
+            console.log(response);
+          }
     }
 
     return (
@@ -20,7 +37,7 @@ const Login = ({navigation}) => {
             <Text style={styles.title} >Login</Text>
             <TextInput
                 style={styles.input}
-                placeholder="Email"
+                placeholder='Email'
                 value={values.email}
                 onChangeText={(value)=>setValues({...values,email:value})}
                 autoFocus
@@ -30,6 +47,7 @@ const Login = ({navigation}) => {
                 placeholder="Password"
                 value={values.password}
                 onChangeText={(value)=>setValues({...values,password:value})}
+                useNativeDriver={true}
             />
             <Button
                 color="#0074ff"
@@ -58,13 +76,14 @@ const styles = StyleSheet.create({
         elevation:10,
         borderRadius:10
     },
-    input: {
-        height: 40,
-        marginBottom: 10,
-        borderWidth: 1,
-        padding: 10,
-        borderBottomColor:'grey',
+    input:{
+        width:'97%',
+        height:40,
+        marginBottom:10,
+        borderBottomColor:'black',
         borderBottomWidth:1,
+        alignSelf:'center',
+        paddingLeft:5
     },
     title:{
         fontWeight:'bold',

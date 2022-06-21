@@ -8,9 +8,9 @@ const HomeDetails = () => {
 
   return (
     <View style={styles.container} >
-        <Text style={styles.text} >Welcome Back Lakshitha,</Text>
-        <Text >Have a nice day...</Text>
-        <Text>Your clock is ticking, let's do that...</Text>
+        {userData&&<Text style={styles.greet} >{`Welcome Back ${userData.name}`},</Text>}
+        <Text style={styles.text} >Have a nice day...</Text>
+        <Text style={styles.text} >Your clock is ticking, let's do that...</Text>
     </View>
   )
 };
@@ -19,9 +19,16 @@ const styles = StyleSheet.create({
     container:{
         alignSelf:'center'
     },
-    text:{
+    greet:{
         fontSize:30,
-        fontWeight:'bold'
+        fontWeight:'bold',
+        textAlign:'center'
+    },
+    text:{
+        fontSize:15,
+        fontWeight:'bold',
+        textAlign:'left',
+        alignSelf:'center'
     }
 });
 
