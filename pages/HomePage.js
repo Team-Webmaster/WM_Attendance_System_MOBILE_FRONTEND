@@ -45,7 +45,7 @@ const HomePage = ({ navigation }) => {
           </View>
         </View>
         <View style={{ width: 100, alignSelf: 'center' }} >
-          <Attend />
+          <Attend navigation={navigation} />
         </View>
       </View>
     </ScrollView>
