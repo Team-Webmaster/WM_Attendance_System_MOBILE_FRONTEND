@@ -8,7 +8,6 @@ import UserContextProvider from './store/Context';
 import React from 'react';
 import AttendCamera from './components/AttendCamera';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LeaveManagementPage from './pages/LeaveManagementPage';
 
 const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
@@ -17,7 +16,6 @@ function Root() {
   return (
     <Drawer.Navigator initialRouteName='Home' >
       <Drawer.Screen name='Home' component={HomePage} />
-      <Drawer.Screen name='Leave Management' component={LeaveManagementPage} />
     </Drawer.Navigator>
   );
 }

@@ -4,7 +4,7 @@ import { Camera, CameraType } from 'expo-camera';
 import { UserContext } from '../store/Context';
 import axios from 'axios';
 
-const AttendCamera = ({ navigation }) => {
+const AttendCamera = ({ route, navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(CameraType.front);
   const [camera, setCamera] = useState(new Camera());
@@ -20,24 +20,147 @@ const AttendCamera = ({ navigation }) => {
     const photo = await camera.takePictureAsync();
     const imageFile = blobToFile(await (await fetch(photo.uri)).blob(), "newFile")
     const formData = new FormData();
-    formData.append('date', new Date().toString().slice(0, 10));
-    formData.append('inTime', new Date().toString().slice(0, 10));
-    formData.append('outTime', new Date().toString().slice(0, 10));
-    formData.append('type', 'Attend');
-    formData.append('uId', userData.userId);
-    formData.append('faceImage', imageFile);
-    setIsLoading(true);
-    axios.post('https://localhost:5001/api/Attendance/add', formData)
-      .then((res) => {
-        setIsLoading(false);
-        Alert.alert("Attend success.!", "You are successfully marked your attendance.",
-          [{ text: "Back to home", onPress: () => navigation.navigate('Home') }]);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        Alert.alert("Attend failed.!", "Your face is not matched. Try again.",
-          [{ text: "Try again", style: 'cancel' }]);
-      });
+    if (route.params.userStatus.type === 0) {
+      formData.append('date', new Date().toISOString().slice(0, 10));
+      formData.append('inTime', new Date().toString().slice(11, 16));
+      formData.append('outTime', '');
+      formData.append('type', 'Attend');
+      formData.append('uId', userData.userId);
+      formData.append('faceImage', imageFile);
+      setIsLoading(true);
+      axios.post('https://localhost:5001/api/Attendance/add', formData)
+        .then((res) => {
+          setIsLoading(false);
+          Alert.alert("Attend success.!", "You are successfully marked your attendance.",
+            [{ text: "Back to home", onPress: () => navigation.navigate('Home') }]);
+          alert("Attend success.! You are successfully marked your attendance.");
+          navigation.navigate('Home');
+          console.log(res);
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          Alert.alert("Attend failed.!", "Your face is not matched. Try again.",
+            [{ text: "Try again", style: 'cancel' }]);
+          if (err.response.status === 500) {
+            alert("Attend failed. face not found.");
+          } else {
+            alert("Attend failed.! Your face is not matched. Try again.");
+          }
+        });
+    } else if (route.params.userStatus.type === 1) {
+      if (route.params.type === "B2W") {
+        formData.append('date', route.params.userStatus.break.date);
+        formData.append('inTime', route.params.userStatus.break.inTime);
+        formData.append('outTime', new Date().toString().slice(11, 16));
+        formData.append('type', 'Break');
+        formData.append('uId', userData.userId);
+        formData.append('faceImage', imageFile);
+        setIsLoading(true);
+        axios.put(`https://localhost:5001/api/Attendance/${route.params.userStatus.break.id}`, formData)
+          .then((res) => {
+            setIsLoading(false);
+            Alert.alert("Attend success.!", "You are successfully marked your attendance.",
+              [{ text: "Back to home", onPress: () => navigation.navigate('Home') }]);
+            alert("Attend success.! You are successfully marked your attendance.");
+            navigation.navigate('Home');
+            console.log(res);
+          })
+          .catch((err) => {
+            setIsLoading(false);
+            Alert.alert("Attend failed.!", "Your face is not matched. Try again.",
+              [{ text: "Try again", style: 'cancel' }]);
+            if (err.response.status === 500) {
+              alert("Attend failed. face not found.");
+            } else {
+              alert("Attend failed.! Your face is not matched. Try again.");
+            }
+          });
+      } else {
+        formData.append('date', route.params.userStatus.break.date);
+        formData.append('inTime', route.params.userStatus.break.inTime);
+        formData.append('outTime', new Date().toString().slice(11, 16));
+        formData.append('type', 'Attend');
+        formData.append('uId', userData.userId);
+        formData.append('faceImage', imageFile);
+        setIsLoading(true);
+        axios.put(`https://localhost:5001/api/Attendance/${route.params.userStatus.attend.id}`, formData)
+          .then((res) => {
+            setIsLoading(false);
+            Alert.alert("Attend success.!", "You are successfully marked your attendance.",
+              [{ text: "Back to home", onPress: () => navigation.navigate('Home') }]);
+            alert("Attend success.! You are successfully marked your attendance.");
+            navigation.navigate('Home');
+            console.log(res);
+          })
+          .catch((err) => {
+            setIsLoading(false);
+            Alert.alert("Attend failed.!", "Your face is not matched. Try again.",
+              [{ text: "Try again", style: 'cancel' }]);
+            if (err.response.status === 500) {
+              alert("Attend failed. face not found.");
+            } else {
+              alert("Attend failed.! Your face is not matched. Try again.");
+            }
+          });
+      }
+    } else {
+      if (route.params.type === "Br") {
+        formData.append('date', new Date().toISOString().slice(0, 10));
+        formData.append('inTime', new Date().toString().slice(11, 16));
+        formData.append('outTime', '');
+        formData.append('type', 'Break');
+        formData.append('uId', userData.userId);
+        formData.append('faceImage', imageFile);
+        setIsLoading(true);
+        axios.post('https://localhost:5001/api/Attendance/add', formData)
+          .then((res) => {
+            setIsLoading(false);
+            Alert.alert("Attend success.!", "You are successfully marked your attendance.",
+              [{ text: "Back to home", onPress: () => navigation.navigate('Home') }]);
+            alert("Attend success.! You are successfully marked your attendance.");
+            navigation.navigate('Home');
+            console.log(res);
+          })
+          .catch((err) => {
+            setIsLoading(false);
+            Alert.alert("Attend failed.!", "Your face is not matched. Try again.",
+              [{ text: "Try again", style: 'cancel' }]);
+            if (err.response.status === 500) {
+              alert("Attend failed. face not found.");
+            } else {
+              alert("Attend failed.! Your face is not matched. Try again.");
+            }
+          });
+      } else {
+        formData.append('date', route.params.userStatus.break.date);
+        formData.append('inTime', route.params.userStatus.break.inTime);
+        formData.append('outTime', new Date().toString().slice(11, 16));
+        formData.append('type', 'Attend');
+        formData.append('uId', userData.userId);
+        formData.append('faceImage', imageFile);
+        setIsLoading(true);
+        axios.put(`https://localhost:5001/api/Attendance/${route.params.userStatus.attend.id}`, formData)
+          .then((res) => {
+            setIsLoading(false);
+            Alert.alert("Attend success.!", "You are successfully marked your attendance.",
+              [{ text: "Back to home", onPress: () => navigation.navigate('Home') }]);
+            alert("Attend success.! You are successfully marked your attendance.");
+            navigation.navigate('Home');
+            console.log(res);
+          })
+          .catch((err) => {
+            setIsLoading(false);
+            Alert.alert("Attend failed.!", "Your face is not matched. Try again.",
+              [{ text: "Try again", style: 'cancel' }]);
+            if (err.response.status === 500) {
+              alert("Attend failed. face not found.");
+            } else {
+              alert("Attend failed.! Your face is not matched. Try again.");
+            }
+          });
+      }
+    }
+
   }
 
   useEffect(() => {
