@@ -1,7 +1,6 @@
 import useFetch from "../hooks/useFetch"
 
-export const currentStatus = (userId)=>{
-    const {data} = useFetch(`https://localhost:5001/api/Attendance/today/${userId}`);
+export const currentStatus = (data)=>{
     const attended = data.filter(a=>a.type==="Attend"&&a.inTime!==null&&a.outTime===null);
     if(attended.length>0){
         const inBreak = data.filter(a=>a.type==="Break"&&a.inTime!==null&&a.outTime===null);
