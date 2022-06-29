@@ -222,7 +222,7 @@ const AttendCamera = ({ route, navigation }) => {
               backgroundColor: '#fff'
             }}
           >
-            <Text style={styles.attendText} >Attend</Text>
+            <Text style={styles.attendText} >Capture</Text>
             <Text style={styles.attendTextMe} >ME</Text>
           </TouchableOpacity>
         </View>
